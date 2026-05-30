@@ -1,3 +1,8 @@
+from flask import session
+
+from database import app
+from models import Usuario
+
 @app.route('/dashboard/admin')
 def dashboard_admin():
 

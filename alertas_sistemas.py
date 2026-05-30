@@ -1,28 +1,8 @@
-from flask import Flask, request, session
-from flask_sqlalchemy import SQLAlchemy
+from flask import request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__)
-app.secret_key = "chave_super_secreta"
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
-
-# =========================
-# MODELO USUÁRIO
-# =========================
-class Usuario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), nullable=False, unique=True)
-    senha = db.Column(db.String(255), nullable=False)
-    tipo_usuario = db.Column(db.String(50), nullable=False)
-
-with app.app_context():
-    db.create_all()
-
+from database import app, db
+from models import Usuario
 
 # =========================
 # MENSAGENS PADRÃO
