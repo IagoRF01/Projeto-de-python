@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Criar Trabalho</h1>
+
+<form method="POST">
+
+  <input name="titulo" placeholder="Título" required>
+  <br><br>
+
+  <textarea name="resumo" placeholder="Resumo" required></textarea>
+  <br><br>
+
+  <button type="submit">Criar</button>
+
+</form>
+
+{% endblock %}

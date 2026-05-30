@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="header">
+  <h1>Dashboard de Trabalhos</h1>
+  <p>Selecione um trabalho para visualizar</p>
+</div>
+
+<div class="cards">
+
+  {% for trabalho in trabalhos %}
+    <a href="/trabalho/{{ trabalho.id }}" style="text-decoration:none;">
+      <div class="card card-aluno">
+
+        <div class="icon-circle icon-aluno">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+          </svg>
+        </div>
+
+        <div class="card-title">
+          {{ trabalho.titulo }}
+        </div>
+
+        <div class="card-desc">
+          Clique para visualizar detalhes
+        </div>
+
+        <button class="btn-login">Abrir</button>
+
+      </div>
+    </a>
+  {% endfor %}
+
+</div>
+
+{% endblock %}
