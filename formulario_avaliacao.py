@@ -1,3 +1,7 @@
+from flask import request, session
+
+from database import app
+
 @app.route('/avaliacao', methods=['POST'])
 def avaliacao():
 
