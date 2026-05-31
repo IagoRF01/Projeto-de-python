@@ -37,3 +37,50 @@ def criar_trabalho():
         return redirect("/")
 
     return render_template("criar_trabalho.html")
+
+@app.route("/avaliador")
+def dashboard_avaliador():
+
+    status = request.args.get("status")
+
+    if status:
+        trabalhos = Trabalho.query.filter_by(status=status).all()
+    else:
+        trabalhos = Trabalho.query.all()
+
+    return render_template(
+        "dashboard_avaliador.html",
+        trabalhos=trabalhos
+    )
+
+@app.route("/avaliar/<id>")
+def avaliar_trabalho(id):
+    trabalho = Trabalho.query.get(id)
+
+    return render_template(
+        "avaliar_trabalho.html",
+        trabalho=trabalho
+    )
+
+@app.route("/aprovar/<id>", methods=["POST"])
+def aprovar_trabalho(id):
+
+    trabalho = Trabalho.query.get(id)
+
+    trabalho.status = "Aprovado"
+
+    db.session.commit()
+
+    return redirect("/avaliador")
+
+
+@app.route("/rejeitar/<id>", methods=["POST"])
+def rejeitar_trabalho(id):
+
+    trabalho = Trabalho.query.get(id)
+
+    trabalho.status = "Rejeitado"
+
+    db.session.commit()
+
+    return redirect("/avaliador")

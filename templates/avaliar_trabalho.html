@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Avaliar Trabalho{% endblock %}
+
+{% block content %}
+
+<div class="header">
+  <h1>Avaliação de Trabalho</h1>
+</div>
+
+<div class="card">
+
+  <h2>{{ trabalho.titulo }}</h2>
+
+  <p><strong>Resumo:</strong></p>
+  <p>{{ trabalho.resumo }}</p>
+
+  <p><strong>Status:</strong> {{ trabalho.status }}</p>
+
+  <br>
+
+  <form action="/aprovar/{{ trabalho.id }}" method="POST">
+    <button type="submit">Aprovar</button>
+  </form>
+
+  <br>
+
+  <form action="/rejeitar/{{ trabalho.id }}" method="POST">
+    <button type="submit">Rejeitar</button>
+  </form>
+
+</div>
+
+{% endblock %}

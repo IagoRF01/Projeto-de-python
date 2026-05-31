@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Avaliador{% endblock %}
+
+{% block content %}
+
+<div class="header">
+  <h1>Dashboard do Avaliador</h1>
+  <p>Selecione um trabalho para avaliar</p>
+</div>
+
+<div style="margin:20px 0;">
+
+  <a href="/avaliador">Todos</a> |
+
+  <a href="/avaliador?status=Enviado">
+    Enviados
+  </a> |
+
+  <a href="/avaliador?status=Aprovado">
+    Aprovados
+  </a> |
+
+  <a href="/avaliador?status=Rejeitado">
+    Rejeitados
+  </a>
+
+</div>
+
+<div class="cards">
+
+  {% for trabalho in trabalhos %}
+    <div class="card">
+      <h3>{{ trabalho.titulo }}</h3>
+
+      <p><strong>Status:</strong> {{ trabalho.status }}</p>
+
+      <a href="/avaliar/{{ trabalho.id }}">
+        Avaliar
+      </a>
+    </div>
+  {% endfor %}
+
+</div>
+
+{% endblock %}
