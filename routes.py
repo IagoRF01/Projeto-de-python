@@ -1,6 +1,6 @@
 from flask import render_template, redirect, request
 from database import app, db
-from models import Trabalho
+from models import Trabalho, HistoricoMovimentacao
 import uuid
 
 
@@ -32,6 +32,13 @@ def criar_trabalho():
         )
 
         db.session.add(novo)
+        historico = HistoricoMovimentacao(
+        trabalho_id=novo.id,
+        descricao="Trabalho criado"
+        )
+
+        db.session.add(historico)
+
         db.session.commit()
 
         return redirect("/")
@@ -69,6 +76,13 @@ def aprovar_trabalho(id):
 
     trabalho.status = "Aprovado"
 
+    historico = HistoricoMovimentacao(
+    trabalho_id=id,
+    descricao="Trabalho aprovado"
+)
+
+    db.session.add(historico)
+
     db.session.commit()
 
     return redirect("/avaliador")
@@ -80,7 +94,12 @@ def rejeitar_trabalho(id):
     trabalho = Trabalho.query.get(id)
 
     trabalho.status = "Rejeitado"
+    historico = HistoricoMovimentacao(
+    trabalho_id=id,
+    descricao="Trabalho rejeitado"
+)
 
+    db.session.add(historico)
     db.session.commit()
 
     return redirect("/avaliador")
