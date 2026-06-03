@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+Meus Trabalhos
+</title>
+
+<link
+rel="stylesheet"
+href="{{ url_for('static',
+filename='css/dashboard.css') }}"
+>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="topo">
+
+        <h1>
+            Meus Trabalhos
+        </h1>
+
+        <a
+        href="/nova-submissao"
+        class="btn">
+
+            Nova Submissão
+
+        </a>
+
+    </div>
+
+    {% if trabalhos %}
+
+        {% for trabalho in trabalhos %}
+
+        <div class="card">
+
+            <h2>
+                {{ trabalho.titulo }}
+            </h2>
+
+            <p>
+
+                <strong>
+                Status:
+                </strong>
+
+                {{ trabalho.status }}
+
+            </p>
+
+            <p>
+
+                <strong>
+                Nota:
+                </strong>
+
+                {% if trabalho.nota_final %}
+
+                    {{ trabalho.nota_final }}
+
+                {% else %}
+
+                    Aguardando avaliação
+
+                {% endif %}
+
+            </p>
+
+            <button
+            onclick="abrirFeedback(
+            `{{ trabalho.feedback }}`
+            )">
+
+                Ver Feedback
+
+            </button>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+        Nenhum trabalho enviado.
+        </p>
+
+    {% endif %}
+
+</div>
+
+<script>
+
+function abrirFeedback(feedback){
+
+    if(
+        feedback === '' ||
+        feedback === 'None'
+    ){
+
+        alert(
+        'Feedback ainda não disponível.'
+        );
+
+        return;
+    }
+
+    alert(feedback);
+}
+
+</script>
+
+</body>
+</html>
