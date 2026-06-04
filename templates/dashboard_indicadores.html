@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>
+        Dashboard Administrativo
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for(
+          'static',
+          filename='css/dashboard_indicadores.css'
+          ) }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Dashboard Administrativo
+    </h1>
+
+    <div class="cards">
+
+        <div class="card">
+            <h2>{{ total_trabalhos }}</h2>
+            <p>Trabalhos Submetidos</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ trabalhos_em_avaliacao }}</h2>
+            <p>Em Avaliação</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ trabalhos_avaliados }}</h2>
+            <p>Avaliados</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ avaliacoes_pendentes }}</h2>
+            <p>Avaliações Pendentes</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ media_geral }}</h2>
+            <p>Média Geral</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ total_alunos }}</h2>
+            <p>Alunos</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ total_avaliadores }}</h2>
+            <p>Avaliadores</p>
+        </div>
+
+        <div class="card">
+            <h2>{{ total_admins }}</h2>
+            <p>Administradores</p>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
