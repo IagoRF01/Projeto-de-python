@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atribuição de Avaliadores</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='css/atribuicao_avaliadores.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Atribuição de Avaliadores</h1>
+
+    {% if trabalhos %}
+
+        {% for trabalho in trabalhos %}
+
+        <div class="card">
+
+            <h2>{{ trabalho.titulo }}</h2>
+
+            <p>
+                <strong>Status:</strong>
+                {{ trabalho.status }}
+            </p>
+
+            <p>
+                <strong>Resumo:</strong>
+                {{ trabalho.resumo }}
+            </p>
+
+            <form
+                action="{{ url_for('atribuir_avaliador',
+                trabalho_id=trabalho.id) }}"
+                method="POST"
+            >
+
+                <label>
+                    Escolha um avaliador:
+                </label>
+
+                <select
+                    name="avaliador_id"
+                    required
+                >
+
+                    <option value="">
+                        Selecione...
+                    </option>
+
+                    {% for avaliador in avaliadores %}
+
+                    <option value="{{ avaliador.id }}">
+                        {{ avaliador.nome }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+                <button type="submit">
+                    Atribuir Avaliador
+                </button>
+
+            </form>
+
+            {% if trabalho.avaliador_id %}
+
+            <div class="vinculado">
+
+                <strong>Avaliador Vinculado:</strong>
+
+                {{ avaliadores_dict.get(
+                    trabalho.avaliador_id,
+                    'Não encontrado'
+                ) }}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>Nenhum trabalho encontrado.</p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
