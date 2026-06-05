@@ -32,6 +32,17 @@
         Relatório Consolidado
     </h1>
 
+    <a
+        href="{{ url_for(
+            'relatorio_pdf',
+            trabalho_id=trabalho.id
+        ) }}"
+        class="btn-pdf"
+    >
+        Exportar PDF
+    </a>
+
+
     <div class="card">
 
         <h2>
