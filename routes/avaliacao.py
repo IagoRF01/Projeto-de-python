@@ -19,12 +19,22 @@ from models import (
 def salvar_avaliacao(
     trabalho_id
 ):
+    
+    db.session.commit()
+
+calcular_media_final(
+    trabalho_id
+)
+
+return redirect(
+    '/painel'
+)
 
     # =====================
     # VALIDA LOGIN
     # =====================
 
-    if 'usuario_id' not in session:
+ if 'usuario_id' not in session:
         return "Acesso negado!"
 
     if session['tipo'] != 'avaliador':
