@@ -50,3 +50,18 @@ h1{
 .avaliacao{
     margin-bottom:20px;
 }
+
+.btn-pdf{
+
+    display:inline-block;
+
+    padding:12px 20px;
+
+    margin-bottom:20px;
+
+    text-decoration:none;
+
+    border-radius:6px;
+
+    font-weight:bold;
+}
