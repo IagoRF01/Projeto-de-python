@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Histórico de Movimentações
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for(
+            'static',
+            filename='css/historico_movimentacoes.css'
+        ) }}"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Histórico de Movimentações
+    </h1>
+
+    <h2>
+        {{ trabalho.titulo }}
+    </h2>
+
+    {% if historicos %}
+
+        {% for item in historicos %}
+
+        <div class="card">
+
+            <p>
+                {{ item.descricao }}
+            </p>
+
+            <small>
+                {{ item.criado_em.strftime(
+                    '%d/%m/%Y %H:%M'
+                ) }}
+            </small>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            Nenhuma movimentação registrada.
+        </p>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
