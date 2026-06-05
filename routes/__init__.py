@@ -4,3 +4,4 @@ from .dashboard_indicadores import *
 from .historico_movimentacoes import *
 from .avaliacao import *
 from .media_final import *
+from .relatorio_trabalho import *
