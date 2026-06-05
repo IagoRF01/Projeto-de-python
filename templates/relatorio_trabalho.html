@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Relatório do Trabalho
+</title>
+
+<link
+    rel="stylesheet"
+    href="{{ url_for(
+        'static',
+        filename='css/relatorio_trabalho.css'
+    ) }}"
+>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Relatório Consolidado
+    </h1>
+
+    <div class="card">
+
+        <h2>
+            Dados do Aluno
+        </h2>
+
+        <p>
+            <strong>Nome:</strong>
+            {{ aluno.nome }}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            {{ aluno.email }}
+        </p>
+
+        <p>
+            <strong>Matrícula:</strong>
+            {{ aluno.matricula }}
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>
+            Trabalho
+        </h2>
+
+        <p>
+            <strong>Título:</strong>
+            {{ trabalho.titulo }}
+        </p>
+
+        <p>
+            <strong>Resumo:</strong>
+            {{ trabalho.resumo }}
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            {{ trabalho.status }}
+        </p>
+
+        <p>
+            <strong>Média Final:</strong>
+            {{ trabalho.media_final }}
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <h2>
+            Avaliações
+        </h2>
+
+        {% for avaliacao in avaliacoes %}
+
+        <div class="avaliacao">
+
+            <p>
+                <strong>Originalidade:</strong>
+                {{ avaliacao.originalidade }}
+            </p>
+
+            <p>
+                <strong>Clareza:</strong>
+                {{ avaliacao.clareza }}
+            </p>
+
+            <p>
+                <strong>Metodologia:</strong>
+                {{ avaliacao.metodologia }}
+            </p>
+
+            <p>
+                <strong>Relevância:</strong>
+                {{ avaliacao.relevancia }}
+            </p>
+
+            <p>
+                <strong>Organização:</strong>
+                {{ avaliacao.organizacao }}
+            </p>
+
+            <p>
+                <strong>Comentário:</strong>
+                {{ avaliacao.comentario }}
+            </p>
+
+            <hr>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
