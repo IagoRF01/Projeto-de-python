@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+Plataforma de Submissão Acadêmica
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-center">
+
+  <!-- TELA SELEÇÃO -->
+  <div id="tela-selecao">
+
+    <div class="header">
+      <h1>Plataforma de Submissão Acadêmica</h1>
+      <p>Sistema de gerenciamento de trabalhos acadêmicos</p>
+    </div>
+
+    <div class="cards">
+
+      <!-- ALUNO -->
+      <div class="card card-aluno">
+
+        <div class="icon-circle icon-aluno">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+          </svg>
+        </div>
+
+        <div class="card-title">Aluno</div>
+        <div class="card-desc">Submeta seus trabalhos acadêmicos</div>
+
+        <a class="btn-login" href="{{ url_for('login_page', perfil='aluno') }}">
+          Fazer Login
+        </a>
+
+      </div>
+
+      <!-- AVALIADOR -->
+      <div class="card card-avaliador">
+
+        <div class="icon-circle icon-avaliador">
+          <svg viewBox="0 0 24 24">
+            <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+
+        <div class="card-title">Avaliador</div>
+        <div class="card-desc">Avalie trabalhos acadêmicos</div>
+
+        <a class="btn-login" href="{{ url_for('login_page', perfil='avaliador') }}">
+          Fazer Login
+        </a>
+
+      </div>
+
+      <!-- ADMIN -->
+      <div class="card card-admin">
+
+        <div class="icon-circle icon-admin">
+          <svg viewBox="0 0 24 24">
+            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+          </svg>
+        </div>
+
+        <div class="card-title">Administrador</div>
+        <div class="card-desc">Gerencie usuários e sistema</div>
+
+        <a class="btn-login" href="{{ url_for('login_page', perfil='admin') }}">
+          Fazer Login
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

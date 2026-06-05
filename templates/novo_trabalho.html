@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Novo Trabalho{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+  <h2>Novo Trabalho</h2>
+
+  <form method="POST">
+
+    <label>Título</label>
+    <input type="text" name="titulo" required>
+
+    <label>Resumo</label>
+    <textarea name="resumo" required></textarea>
+
+    <button type="submit">Salvar Trabalho</button>
+
+  </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,349 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px 80px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.header p {
+  font-size: 0.95rem;
+  color: #6b7280;
+}
+
+.cards {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 36px 28px 32px;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1.5px solid transparent;
+}
+
+.card-aluno {
+  border-color: #bfcfff;
+}
+
+.card-avaliador {
+  border-color: #6ee7b7;
+}
+
+.card-admin {
+  border-color: #d8b4fe;
+}
+
+.icon-circle {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.icon-circle svg {
+  width: 32px;
+  height: 32px;
+  fill: white;
+}
+
+.icon-aluno    { background-color: #3b82f6; }
+.icon-avaliador { background-color: #10b981; }
+.icon-admin    { background-color: #a855f7; }
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.card-aluno .card-title    { color: #3b82f6; }
+.card-avaliador .card-title { color: #10b981; }
+.card-admin .card-title    { color: #a855f7; }
+
+.card-desc {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.btn-login {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 0;
+  background-color: #f97316;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-login:hover {
+  background-color: #ea6c0a;
+}
+
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1f2937;
+  color: #f9fafb;
+  font-size: 0.82rem;
+  padding: 12px 20px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.toast-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Utilitário ── */
+.hidden { display: none !important; }
+
+/* ── Tela de Login ── */
+#tela-login {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.btn-voltar {
+  align-self: flex-start;
+  position: absolute;
+  top: 40px;
+  left: 60px;
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-voltar:hover {
+  opacity: 0.7;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid #bfcfff;
+  padding: 40px 36px 36px;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 28px;
+}
+
+.form-group {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f3f4f6;
+  font-size: 0.9rem;
+  color: #374151;
+  outline: none;
+  transition: background 0.2s;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+.form-group input:focus {
+  background-color: #e9ecf0;
+}
+
+.btn-entrar {
+  width: 100%;
+  padding: 13px 0;
+  margin-top: 8px;
+  background-color: #f97316;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-entrar:hover {
+  background-color: #ea6c0a;
+}
+
+/* ================= DASHBOARD ================= */
+
+.dash__header {
+  background-color: #3b5bdb;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+
+.dash__main {
+  padding: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.dash__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.dash__stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 5px solid transparent;
+}
+
+.dash__stat-card--yellow { border-left-color: #d97706; }
+.dash__stat-card--blue   { border-left-color: #2563eb; }
+.dash__stat-card--green  { border-left-color: #16a34a; }
+
+.dash__work-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+
+.dash__badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+.dash__badge--pendente { background: #fef9c3; }
+.dash__badge--aprovado { background: #dcfce7; }
+.dash__badge--rejeitado { background: #fee2e2; }
+
+.dash__empty {
+  padding: 50px;
+  text-align: center;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 60px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.form-container h2 {
+  margin-bottom: 20px;
+}
+
+.form-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.form-container button {
+  width: 100%;
+  padding: 12px;
+  background: #3b5bdb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}

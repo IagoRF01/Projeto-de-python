@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard do Aluno{% endblock %}
+
+{% block content %}
+
+<header class="dash__header">
+  <div class="dash__header-info">
+    <h1 class="dash__header-title">Dashboard do Aluno</h1>
+
+    <p class="dash__header-welcome">
+      Bem-vindo, {{ usuario.nome if usuario else 'Aluno' }}
+    </p>
+  </div>
+
+  <div class="dash__header-actions">
+    <a href="/novo-trabalho" class="dash__btn-novo">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+      </svg>
+      Novo Trabalho
+    </a>
+
+    <a href="/" class="dash__btn-sair">
+      Sair
+    </a>
+  </div>
+</header>
+
+<main class="dash__main">
+
+  <div class="dash__stats">
+
+    <div class="dash__stat-card dash__stat-card--yellow">
+      <span class="dash__stat-label">Aguardando Envio</span>
+      <span class="dash__stat-value">
+        {{ trabalhos | selectattr('status', 'equalto', 'pendente') | list | length }}
+      </span>
+    </div>
+
+    <div class="dash__stat-card dash__stat-card--blue">
+      <span class="dash__stat-label">Em Avaliação</span>
+      <span class="dash__stat-value">
+        {{ trabalhos | selectattr('status', 'equalto', 'em_avaliacao') | list | length }}
+      </span>
+    </div>
+
+    <div class="dash__stat-card dash__stat-card--green">
+      <span class="dash__stat-label">Finalizados</span>
+      <span class="dash__stat-value">
+        {{ trabalhos | selectattr('status', 'in', ['aprovado', 'rejeitado']) | list | length }}
+      </span>
+    </div>
+
+  </div>
+
+  <section>
+
+    <div class="dash__section-header">
+      <h2 class="dash__section-title">Meus Trabalhos</h2>
+    </div>
+
+    {% if trabalhos and trabalhos|length > 0 %}
+
+      <div class="dash__work-list">
+
+        {% for t in trabalhos %}
+
+          {% if t.status == 'aprovado' %}
+            {% set badge_class = 'dash__badge--aprovado' %}
+            {% set badge_label = 'Aprovado' %}
+
+          {% elif t.status == 'rejeitado' %}
+            {% set badge_class = 'dash__badge--rejeitado' %}
+            {% set badge_label = 'Rejeitado' %}
+
+          {% elif t.status == 'em_avaliacao' %}
+            {% set badge_class = 'dash__badge--pendente' %}
+            {% set badge_label = 'Em Avaliação' %}
+
+          {% else %}
+            {% set badge_class = 'dash__badge--pendente' %}
+            {% set badge_label = 'Pendente' %}
+          {% endif %}
+
+          <article class="dash__work-card">
+
+            <div class="dash__work-card-top">
+              <h3 class="dash__work-title">{{ t.titulo }}</h3>
+
+              <span class="dash__badge {{ badge_class }}">
+                {{ badge_label }}
+              </span>
+            </div>
+
+            <p class="dash__work-resumo">
+              {{ t.resumo }}
+            </p>
+
+            <div class="dash__work-meta">
+
+              <div class="dash__work-meta-item">
+                <p class="dash__work-meta-label">Status</p>
+                <p class="dash__work-meta-value">{{ t.status }}</p>
+              </div>
+
+              <div class="dash__work-meta-item">
+                <p class="dash__work-meta-label">Criado em</p>
+                <p class="dash__work-meta-value">
+                  {{ t.criado_em.strftime('%d/%m/%Y') if t.criado_em else '—' }}
+                </p>
+              </div>
+
+            </div>
+
+          </article>
+
+        {% endfor %}
+
+      </div>
+
+    {% else %}
+
+      <div class="dash__empty">
+        <p class="dash__empty-title">Você ainda não enviou trabalhos</p>
+        <p class="dash__empty-subtitle">
+          Envie seu primeiro trabalho para começar.
+        </p>
+      </div>
+
+    {% endif %}
+
+  </section>
+
+</main>
+
+{% endblock %}
