@@ -6,3 +6,4 @@ from .avaliacao import *
 from .media_final import *
 from .relatorio_trabalho import *
 from .relatorio_pdf import *
+from .exportar_planilha import * 
