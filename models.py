@@ -38,6 +38,11 @@ class Trabalho(db.Model):
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
     prazo_envio = db.Column(db.DateTime)
 
+    media_final = db.Column(
+        db.Float,
+        default=0
+    )
+
 class HistoricoMovimentacao(db.Model):
     __tablename__ = "historico_movimentacoes"
 
