@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Sistema{% endblock %}</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Plataforma Acadêmica{% endblock %}</title>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  {% block css %}{% endblock %}
+  {# CSS único do projeto — contém todas as seções #}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+  {# Bloco reservado para CSS extra por página (se necessário no futuro) #}
+  {% block page_css %}{% endblock %}
 </head>
-<body>
 
-<header>
-  <a href="/">Home</a>
-  <a href="/login/aluno">Aluno</a>
-  <a href="/login/avaliador">Avaliador</a>
-</header>
+{#
+  Cada template define sua própria classe no body via {% block body_class %}
+  Isso permite que o CSS use body.page-home, body.page-login, etc.
+  sem conflitos entre páginas.
+#}
+<body class="{% block body_class %}{% endblock %}">
 
-<main>
   {% block content %}{% endblock %}
-</main>
 
 </body>
 </html>

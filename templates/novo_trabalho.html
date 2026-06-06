@@ -2,24 +2,118 @@
 
 {% block title %}Novo Trabalho{% endblock %}
 
-{% block content %}
+  <div class="nt__wrapper">
 
-<div class="form-container">
+    {# ── Cabeçalho ── #}
+    <div class="nt__header">
+      <a href="{{ url_for('dashboard_aluno') }}" class="nt__back-btn">&#8592; Voltar</a>
+      <h1 class="nt__title">Novo Trabalho</h1>
+      <p class="nt__subtitle">Preencha os dados e envie seu arquivo</p>
+    </div>
 
-  <h2>Novo Trabalho</h2>
+    {# ── Flash messages ── #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="nt__alert nt__alert--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
 
-  <form method="POST">
+    {# ── Formulário ── #}
+    <form
+      class="nt__form"
+      method="POST"
+      action="{{ url_for('novo_trabalho') }}"
+      enctype="multipart/form-data"
+    >
 
-    <label>Título</label>
-    <input type="text" name="titulo" required>
+      <div class="nt__field">
+        <label class="nt__label" for="titulo">Título do Trabalho <span class="nt__required">*</span></label>
+        <input
+          class="nt__input"
+          type="text"
+          id="titulo"
+          name="titulo"
+          placeholder="Ex: Impacto da IA na Educação"
+          required
+        />
+      </div>
 
-    <label>Resumo</label>
-    <textarea name="resumo" required></textarea>
+      <div class="nt__field">
+        <label class="nt__label" for="resumo">Resumo <span class="nt__required">*</span></label>
+        <textarea
+          class="nt__textarea"
+          id="resumo"
+          name="resumo"
+          placeholder="Descreva brevemente o seu trabalho..."
+          rows="5"
+          required
+        ></textarea>
+      </div>
 
-    <button type="submit">Salvar Trabalho</button>
+      <div class="nt__field">
+        <label class="nt__label" for="palavras_chave">Palavras-chave</label>
+        <input
+          class="nt__input"
+          type="text"
+          id="palavras_chave"
+          name="palavras_chave"
+          placeholder="Ex: inteligência artificial, educação, tecnologia"
+        />
+        <span class="nt__hint">Separe as palavras-chave por vírgula</span>
+      </div>
 
-  </form>
+      <div class="nt__field">
+        <label class="nt__label" for="arquivo">Arquivo <span class="nt__required">*</span></label>
+        <div class="nt__upload-area" id="upload-area">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="nt__upload-icon">
+            <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+          </svg>
+          <p class="nt__upload-text">Arraste o arquivo aqui ou <span class="nt__upload-link">clique para selecionar</span></p>
+          <p class="nt__upload-hint">PDF ou DOCX — máximo 15 MB</p>
+          <input
+            class="nt__file-input"
+            type="file"
+            id="arquivo"
+            name="arquivo"
+            accept=".pdf,.docx"
+            required
+          />
+        </div>
+        <p class="nt__file-name" id="file-name"></p>
+      </div>
 
-</div>
+      <div class="nt__actions">
+        <a href="{{ url_for('dashboard_aluno') }}" class="nt__btn-cancelar">Cancelar</a>
+        <button type="submit" class="nt__btn-enviar">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+          Enviar Trabalho
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+  <script>
+    // Mostra o nome do arquivo selecionado
+    const input    = document.getElementById('arquivo');
+    const fileName = document.getElementById('file-name');
+    const area     = document.getElementById('upload-area');
+
+    input.addEventListener('change', () => {
+      if (input.files.length > 0) {
+        fileName.textContent = '📎 ' + input.files[0].name;
+        area.classList.add('nt__upload-area--selected');
+      } else {
+        fileName.textContent = '';
+        area.classList.remove('nt__upload-area--selected');
+      }
+    });
+
+    // Clique em qualquer parte da área abre o seletor
+    area.addEventListener('click', () => input.click());
+  </script>
 
 {% endblock %}

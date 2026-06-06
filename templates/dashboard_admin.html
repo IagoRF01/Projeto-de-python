@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard do Administrador{% endblock %}
+
+{% block body_class %}page-dashboard page-dashboard--admin{% endblock %}
+
+{% block content %}
+
+  {# ══════════════════════════════════════
+     HEADER — roxo
+  ══════════════════════════════════════ #}
+  <header class="dash__header dash__header--admin">
+    <div class="dash__header-info">
+      <h1 class="dash__header-title">Dashboard do Administrador</h1>
+      <p class="dash__header-welcome">Bem-vindo, {{ usuario.nome }}</p>
+    </div>
+    <div class="dash__header-actions">
+      <a href="{{ url_for('logout') }}" class="dash__btn-sair">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5a2 2 0 00-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z"/>
+        </svg>
+        Sair
+      </a>
+    </div>
+  </header>
+
+  <main class="dash__main">
+
+    {# ══════════════════════════════════════
+       STATS — linha 1 (totais gerais)
+    ══════════════════════════════════════ #}
+    <div class="dash__stats dash__stats--4col">
+
+      <div class="dash__stat-card dash__stat-card--blue">
+        <span class="dash__stat-label">Total de Alunos</span>
+        <span class="dash__stat-value">{{ alunos | length }}</span>
+      </div>
+
+      <div class="dash__stat-card dash__stat-card--green">
+        <span class="dash__stat-label">Total de Avaliadores</span>
+        <span class="dash__stat-value">{{ avaliadores | length }}</span>
+      </div>
+
+      <div class="dash__stat-card dash__stat-card--purple">
+        <span class="dash__stat-label">Total de Trabalhos</span>
+        <span class="dash__stat-value">{{ todos_trabalhos | length }}</span>
+      </div>
+
+      <div class="dash__stat-card dash__stat-card--orange">
+        <span class="dash__stat-label">Total de Avaliações</span>
+        <span class="dash__stat-value">{{ total_avaliacoes }}</span>
+      </div>
+
+    </div>
+
+    {# ── Linha 2 (status dos trabalhos) ── #}
+    <div class="dash__stats" style="margin-bottom: 32px;">
+
+      <div class="dash__stat-card dash__stat-card--yellow">
+        <span class="dash__stat-label">Aguardando Envio</span>
+        <span class="dash__stat-value">{{ total_pendentes }}</span>
+      </div>
+
+      <div class="dash__stat-card dash__stat-card--blue">
+        <span class="dash__stat-label">Aguardando Avaliação</span>
+        <span class="dash__stat-value">{{ total_em_avaliacao }}</span>
+      </div>
+
+      <div class="dash__stat-card dash__stat-card--green">
+        <span class="dash__stat-label">Avaliados</span>
+        <span class="dash__stat-value">{{ total_avaliacoes }}</span>
+      </div>
+
+    </div>
+
+    {# ── Botão criar usuário ── #}
+    <div style="margin-bottom: 32px;">
+      <a href="{{ url_for('criar_usuario') }}" class="dash__btn-admin-criar"></a>
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
+          <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+        Criar Novo Usuário
+      </a>
+    </div>
+
+    {# ══════════════════════════════════════
+       USUÁRIOS CADASTRADOS
+    ══════════════════════════════════════ #}
+    <section style="margin-bottom: 48px;">
+      <h2 class="dash__section-title admin__section-title">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        Usuários Cadastrados
+      </h2>
+
+      <div class="admin__users-grid">
+
+        {# Alunos #}
+        <div class="admin__user-panel">
+          <div class="admin__user-panel-header">
+            <span class="admin__user-panel-title">Alunos ({{ alunos | length }})</span>
+            <span class="admin__user-panel-desc">Lista de todos os alunos cadastrados</span>
+          </div>
+          {% for a in alunos %}
+            <div class="admin__user-card admin__user-card--aluno">
+              <p class="admin__user-nome">{{ a.nome }}</p>
+              <p class="admin__user-email">{{ a.email }}</p>
+            </div>
+          {% else %}
+            <p class="admin__user-vazio">Nenhum aluno cadastrado.</p>
+          {% endfor %}
+        </div>
+
+        {# Avaliadores #}
+        <div class="admin__user-panel">
+          <div class="admin__user-panel-header">
+            <span class="admin__user-panel-title">Avaliadores ({{ avaliadores | length }})</span>
+            <span class="admin__user-panel-desc">Lista de todos os avaliadores cadastrados</span>
+          </div>
+          {% for av in avaliadores %}
+            <div class="admin__user-card admin__user-card--avaliador">
+              <p class="admin__user-nome">{{ av.nome }}</p>
+              <p class="admin__user-email">{{ av.email }}</p>
+            </div>
+          {% else %}
+            <p class="admin__user-vazio">Nenhum avaliador cadastrado.</p>
+          {% endfor %}
+        </div>
+
+      </div>
+    </section>
+
+    {# ══════════════════════════════════════
+       TODOS OS TRABALHOS
+    ══════════════════════════════════════ #}
+    <section>
+      <h2 class="dash__section-title admin__section-title">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+        </svg>
+        Todos os Trabalhos ({{ todos_trabalhos | length }})
+      </h2>
+
+      {% if todos_trabalhos %}
+        <div class="dash__work-list">
+          {% for t in todos_trabalhos %}
+
+            {% if t.status == 'aprovado' %}
+              {% set badge_class = 'dash__badge--aprovado' %}
+              {% set badge_label = 'Aprovado' %}
+            {% elif t.status == 'rejeitado' %}
+              {% set badge_class = 'dash__badge--rejeitado' %}
+              {% set badge_label = 'Rejeitado' %}
+            {% elif t.status == 'em_avaliacao' %}
+              {% set badge_class = 'dash__badge--em-avaliacao' %}
+              {% set badge_label = 'Aguardando Avaliação' %}
+            {% else %}
+              {% set badge_class = 'dash__badge--pendente' %}
+              {% set badge_label = 'Aguardando Envio' %}
+            {% endif %}
+
+            <article class="dash__work-card dash__work-card--admin">
+
+              <div class="dash__work-card-top">
+                <h3 class="dash__work-title">{{ t.titulo }}</h3>
+                <span class="dash__badge {{ badge_class }}">
+                  <svg viewBox="0 0 24 24" fill="currentColor" style="width:11px;height:11px">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                  </svg>
+                  {{ badge_label }}
+                </span>
+              </div>
+
+              {% if t.resumo %}
+                <p class="dash__work-resumo">{{ t.resumo }}</p>
+              {% endif %}
+
+              <p class="admin__work-partes">
+                Aluno: {{ nomes.get(t.aluno_id, '—') }}
+                &nbsp;•&nbsp;
+                Avaliador: {{ nomes.get(t.avaliador_id, '—') if t.avaliador_id else '—' }}
+              </p>
+
+              <div class="dash__work-meta">
+                {% if t.arquivo_url %}
+                  <div class="dash__work-meta-item">
+                    <p class="dash__work-meta-label">Arquivo Enviado</p>
+                    <p class="dash__work-meta-value">{{ t.arquivo_url.split('/')[-1] }}</p>
+                  </div>
+                {% endif %}
+                <div class="dash__work-meta-item">
+                  <p class="dash__work-meta-label">Prazo de Entrega</p>
+                  <p class="dash__work-meta-value">
+                    {{ t.prazo_envio.strftime('%d/%m/%Y') if t.prazo_envio else '—' }}
+                  </p>
+                </div>
+                <div class="dash__work-meta-item">
+                  <p class="dash__work-meta-label">Criado em</p>
+                  <p class="dash__work-meta-value">
+                    {{ t.criado_em.strftime('%d/%m/%Y') if t.criado_em else '—' }}
+                  </p>
+                </div>
+                <div class="dash__work-meta-item">
+                  <p class="dash__work-meta-label">Submetido em</p>
+                  <p class="dash__work-meta-value">
+                    {{ t.criado_em.strftime('%d/%m/%Y') if t.criado_em else '—' }}
+                  </p>
+                </div>
+              </div>
+
+            </article>
+          {% endfor %}
+        </div>
+
+      {% else %}
+        <div class="dash__empty">
+          <div class="dash__empty-icon" style="background:#f3e8ff">
+            <svg viewBox="0 0 24 24" fill="#a855f7">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
+            </svg>
+          </div>
+          <p class="dash__empty-title">Nenhum trabalho cadastrado ainda</p>
+          <p class="dash__empty-subtitle">Os trabalhos enviados pelos alunos aparecerão aqui.</p>
+        </div>
+      {% endif %}
+
+    </section>
+
+  </main>
+
+{% endblock %}

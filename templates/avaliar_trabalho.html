@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Avaliar Trabalho{% endblock %}
+
+{% block body_class %}page-novo-trabalho{% endblock %}
+
+{% block content %}
+
+  <div class="nt__wrapper" style="max-width:720px">
+
+    <a href="{{ url_for('dashboard_avaliador') }}" class="nt__back-btn">&#8592; Voltar</a>
+
+    <h1 class="nt__title">Avaliar Trabalho</h1>
+    <p class="nt__subtitle">Autor: {{ nome_aluno }}</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="nt__alert nt__alert--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    {# ── Dados do trabalho ── #}
+    <div class="aval__work-info">
+      <h2 class="aval__work-titulo">{{ trabalho.titulo }}</h2>
+      {% if trabalho.resumo %}
+        <p class="aval__work-resumo">{{ trabalho.resumo }}</p>
+      {% endif %}
+      {% if trabalho.palavras_chave %}
+        <p class="aval__work-tags">
+          <strong>Palavras-chave:</strong> {{ trabalho.palavras_chave }}
+        </p>
+      {% endif %}
+      {% if trabalho.arquivo_url %}
+        <a href="{{ trabalho.arquivo_url }}" target="_blank" class="aval__btn-arquivo">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+          </svg>
+          Baixar Arquivo
+        </a>
+      {% endif %}
+    </div>
+
+    {# ── Formulário de avaliação ── #}
+    <form method="POST" action="{{ url_for('avaliar_trabalho', trabalho_id=trabalho.id) }}"
+          style="width:100%; margin-top:28px">
+
+      <div class="nt__field">
+        <label class="nt__label" for="nota">
+          Nota (0 a 10) <span class="nt__required">*</span>
+        </label>
+        <input
+          class="nt__input"
+          type="number"
+          id="nota"
+          name="nota"
+          min="0" max="10" step="0.1"
+          placeholder="Ex: 8.5"
+          value="{{ avaliacao.nota if avaliacao else '' }}"
+          required
+        />
+      </div>
+
+      <div class="nt__field">
+        <label class="nt__label" for="comentario">Comentários e sugestões</label>
+        <textarea
+          class="nt__textarea"
+          id="comentario"
+          name="comentario"
+          rows="6"
+          placeholder="Escreva seus comentários sobre o trabalho..."
+        >{{ avaliacao.comentario if avaliacao else '' }}</textarea>
+      </div>
+
+      <div class="nt__actions">
+        <a href="{{ url_for('dashboard_avaliador') }}" class="nt__btn-cancelar">Cancelar</a>
+
+        {# Salvar rascunho #}
+        <button type="submit" name="acao" value="salvar" class="nt__btn-cancelar"
+                style="background:#f3f4f6; border:1.5px solid #e5e7eb; cursor:pointer">
+          Salvar rascunho
+        </button>
+
+        {# Finalizar avaliação #}
+        <button type="submit" name="acao" value="finalizar" class="nt__btn-enviar"
+                style="background:#16a34a">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+          </svg>
+          Finalizar Avaliação
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+{% endblock %}

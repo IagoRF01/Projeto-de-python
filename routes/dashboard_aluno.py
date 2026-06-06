@@ -1,21 +1,18 @@
-from flask import render_template, session
+from flask import render_template, session, redirect, url_for
 from database import app
-from models import Trabalho
+from models import Usuario, Trabalho
+from routes.auth import login_required
+
 
 @app.route("/dashboard-aluno")
+@login_required(perfil="aluno")
 def dashboard_aluno():
+    usuario = Usuario.query.get(session["usuario_id"])
 
-    print("DASHBOARD ALUNO FOI CHAMADO")
-
-    if "usuario_id" not in session:
-        return "Acesso negado"
-
-    user_id = session["usuario_id"]
-    print("USER ID:", user_id)
-
-    trabalhos = Trabalho.query.filter_by(aluno_id=user_id).all()
+    trabalhos = Trabalho.query.filter_by(aluno_id=session["usuario_id"]).all()
 
     return render_template(
         "dashboard_aluno.html",
+        usuario=usuario,
         trabalhos=trabalhos
     )

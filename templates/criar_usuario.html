@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Criar Usuário{% endblock %}
+
+{% block body_class %}page-novo-trabalho{% endblock %}
+
+{% block content %}
+
+  <div class="nt__wrapper">
+
+    <a href="{{ url_for('dashboard_admin') }}" class="nt__back-btn">&#8592; Voltar</a>
+
+    <h1 class="nt__title">Criar Novo Usuário</h1>
+    <p class="nt__subtitle">Cadastre um aluno ou avaliador na plataforma</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="nt__alert nt__alert--{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('criar_usuario') }}" style="width:100%">
+
+      <div class="nt__field">
+        <label class="nt__label" for="nome">Nome completo <span class="nt__required">*</span></label>
+        <input class="nt__input" type="text" id="nome" name="nome"
+               placeholder="Ex: João Silva" required />
+      </div>
+
+      <div class="nt__field">
+        <label class="nt__label" for="email">Email <span class="nt__required">*</span></label>
+        <input class="nt__input" type="email" id="email" name="email"
+               placeholder="Ex: joao@email.com" required />
+      </div>
+
+      <div class="nt__field">
+        <label class="nt__label" for="senha">Senha <span class="nt__required">*</span></label>
+        <input class="nt__input" type="password" id="senha" name="senha"
+               placeholder="Mínimo 6 caracteres" required />
+        <span class="nt__hint">O usuário poderá alterar a senha depois.</span>
+      </div>
+
+      <div class="nt__field">
+        <label class="nt__label" for="tipo_usuario">Tipo de usuário <span class="nt__required">*</span></label>
+        <select class="nt__input" id="tipo_usuario" name="tipo_usuario" required>
+          <option value="" disabled selected>Selecione...</option>
+          <option value="aluno">Aluno</option>
+          <option value="avaliador">Avaliador</option>
+        </select>
+      </div>
+
+      <div class="nt__actions">
+        <a href="{{ url_for('dashboard_admin') }}" class="nt__btn-cancelar">Cancelar</a>
+        <button type="submit" class="nt__btn-enviar" style="background:#a855f7">
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
+            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          Criar Usuário
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+{% endblock %}
