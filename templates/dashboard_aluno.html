@@ -2,30 +2,16 @@
 
 {% block title %}Dashboard do Aluno{% endblock %}
 
-{% block page_css %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
-{% endblock %}
-
 {% block body_class %}page-dashboard{% endblock %}
 
 {% block content %}
 
-  {# ══════════════════════════════════════
-     HEADER
-  ══════════════════════════════════════ #}
   <header class="dash__header">
     <div class="dash__header-info">
       <h1 class="dash__header-title">Dashboard do Aluno</h1>
       <p class="dash__header-welcome">Bem-vindo, {{ usuario.nome }}</p>
     </div>
-
     <div class="dash__header-actions">
-      <a href="{{ url_for('novo_trabalho') }}" class="dash__btn-novo">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        Novo Trabalho
-      </a>
       <a href="{{ url_for('logout') }}" class="dash__btn-sair">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5a2 2 0 00-2 2v4h2V5h14v14H5v-4H3v4a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z"/>
@@ -35,62 +21,59 @@
     </div>
   </header>
 
-  {# ══════════════════════════════════════
-     CONTEÚDO PRINCIPAL
-  ══════════════════════════════════════ #}
   <main class="dash__main">
 
-    {# ── Cards de estatísticas ── #}
-    <div class="dash__stats">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="nt__alert nt__alert--{{ category }}" style="margin-bottom:20px">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
 
+    <div class="dash__stats">
       <div class="dash__stat-card dash__stat-card--yellow">
         <span class="dash__stat-label">Aguardando Envio</span>
         <span class="dash__stat-value">
           {{ trabalhos | selectattr('status', 'equalto', 'pendente') | list | length }}
         </span>
       </div>
-
       <div class="dash__stat-card dash__stat-card--blue">
         <span class="dash__stat-label">Em Avaliação</span>
         <span class="dash__stat-value">
           {{ trabalhos | selectattr('status', 'equalto', 'em_avaliacao') | list | length }}
         </span>
       </div>
-
       <div class="dash__stat-card dash__stat-card--green">
         <span class="dash__stat-label">Avaliados</span>
         <span class="dash__stat-value">
           {{ trabalhos | selectattr('status', 'in', ['aprovado', 'rejeitado']) | list | length }}
         </span>
       </div>
-
     </div>
 
-    {# ── Seção de trabalhos ── #}
     <section>
       <div class="dash__section-header">
         <h2 class="dash__section-title">Meus Trabalhos</h2>
       </div>
 
       {% if trabalhos %}
-
         <div class="dash__work-list">
           {% for t in trabalhos %}
 
-            {# Badge por status #}
             {% if t.status == 'aprovado' %}
               {% set badge_class = 'dash__badge--aprovado' %}
-              {% set badge_label = 'Aprovado' %}
+              {% set badge_label = 'Avaliado' %}
             {% elif t.status == 'rejeitado' %}
               {% set badge_class = 'dash__badge--rejeitado' %}
-              {% set badge_label = 'Rejeitado' %}
+              {% set badge_label = 'Avaliado' %}
             {% elif t.status == 'em_avaliacao' %}
-              {% set badge_class = 'dash__badge--pendente' %}
+              {% set badge_class = 'dash__badge--em-avaliacao' %}
               {% set badge_label = 'Aguardando Avaliação' %}
             {% else %}
               {% set badge_class = 'dash__badge--pendente' %}
-              {% set badge_label = 'Pendente' %}
+              {% set badge_label = 'Aguardando Envio' %}
             {% endif %}
+
+            {% set av = avaliacoes.get(t.id) %}
 
             <article class="dash__work-card">
 
@@ -103,65 +86,166 @@
                 <p class="dash__work-resumo">{{ t.resumo }}</p>
               {% endif %}
 
+              {% if t.avaliador_id %}
+                <p class="dash__work-professor">
+                  Professor: {{ nomes_avaliadores.get(t.avaliador_id, '—') }}
+                </p>
+              {% endif %}
+
               <div class="dash__work-meta">
-
-                <div class="dash__work-meta-item">
-                  <p class="dash__work-meta-label">Arquivo Enviado</p>
-                  <p class="dash__work-meta-value">
-                    {% if t.arquivo_url %}
-                      <a href="{{ t.arquivo_url }}" target="_blank">Ver arquivo</a>
-                    {% else %}
-                      —
-                    {% endif %}
-                  </p>
-                </div>
-
-                <div class="dash__work-meta-item">
-                  <p class="dash__work-meta-label">Prazo de Entrega</p>
-                  <p class="dash__work-meta-value">
-                    {{ t.prazo_envio.strftime('%d/%m/%Y às %H:%M') if t.prazo_envio else '—' }}
-                  </p>
-                </div>
-
-                <div class="dash__work-meta-item">
-                  <p class="dash__work-meta-label">Data de Submissão</p>
-                  <p class="dash__work-meta-value">
-                    {{ t.criado_em.strftime('%d/%m/%Y') if t.criado_em else '—' }}
-                  </p>
-                </div>
-
+                {% if t.arquivo_url %}
+                  <div class="dash__work-meta-item">
+                    <p class="dash__work-meta-label">Arquivo Enviado</p>
+                    <p class="dash__work-meta-value">
+                      <a href="{{ t.arquivo_url }}" target="_blank">
+                        {{ t.arquivo_url.split('/')[-1] }}
+                      </a>
+                    </p>
+                  </div>
+                {% endif %}
+                {% if t.prazo_envio %}
+                  <div class="dash__work-meta-item">
+                    <p class="dash__work-meta-label">Prazo de Entrega</p>
+                    <p class="dash__work-meta-value">
+                      {{ t.prazo_envio.strftime('%d/%m/%Y às %H:%M') }}
+                    </p>
+                  </div>
+                {% endif %}
+                {% if t.criado_em and t.arquivo_url %}
+                  <div class="dash__work-meta-item">
+                    <p class="dash__work-meta-label">Data de Submissão</p>
+                    <p class="dash__work-meta-value">{{ t.criado_em.strftime('%d/%m/%Y') }}</p>
+                  </div>
+                {% endif %}
+                {% if tempo_restante.get(t.id) and t.status == 'pendente' %}
+                  <div class="dash__work-meta-item">
+                    <p class="dash__work-meta-label">Tempo Restante</p>
+                    <p class="dash__work-meta-value">{{ tempo_restante[t.id] }}</p>
+                  </div>
+                {% endif %}
               </div>
 
-            </article>
+              {# ── Nota final e critérios (só se avaliado) ── #}
+              {% if av %}
+                <div class="aluno__nota-box">
+                  <span class="aluno__nota-label">Nota Final:</span>
+                  <span class="aluno__nota-valor">{{ "%.1f"|format(av.nota|float) }}</span>
+                </div>
 
+                <div class="aluno__avaliacao-box">
+                  <p class="aluno__avaliacao-titulo">Avaliação:</p>
+                  <div class="aluno__avaliacao-card">
+                    <p class="aluno__avaliador-nome">
+                      {{ nomes_avaliadores.get(t.avaliador_id, '—') }}
+                    </p>
+                    <div class="aluno__criterios">
+                      {% if av.relevancia is not none %}
+                        <div class="aluno__criterio">
+                          <p class="aluno__criterio-label">Relevância</p>
+                          <p class="aluno__criterio-valor">{{ "%.0f"|format(av.relevancia|float) }}</p>
+                        </div>
+                      {% endif %}
+                      {% if av.metodologia is not none %}
+                        <div class="aluno__criterio">
+                          <p class="aluno__criterio-label">Metodologia</p>
+                          <p class="aluno__criterio-valor">{{ "%.0f"|format(av.metodologia|float) }}</p>
+                        </div>
+                      {% endif %}
+                      {% if av.clareza is not none %}
+                        <div class="aluno__criterio">
+                          <p class="aluno__criterio-label">Clareza</p>
+                          <p class="aluno__criterio-valor">{{ "%.0f"|format(av.clareza|float) }}</p>
+                        </div>
+                      {% endif %}
+                      {% if av.originalidade is not none %}
+                        <div class="aluno__criterio">
+                          <p class="aluno__criterio-label">Originalidade</p>
+                          <p class="aluno__criterio-valor">{{ "%.0f"|format(av.originalidade|float) }}</p>
+                        </div>
+                      {% endif %}
+                    </div>
+                    {% if av.comentario %}
+                      <p class="aluno__comentario">
+                        <strong>Comentários:</strong> {{ av.comentario }}
+                      </p>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div style="margin-top:16px">
+                  <a href="{{ url_for('certificado_aluno', trabalho_id=t.id) }}"
+                     class="aluno__btn-certificado">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
+                      <path d="M12 1L9 9H1l6.5 4.7-2.5 7.8L12 17l7 4.5-2.5-7.8L23 9h-8z"/>
+                    </svg>
+                    Baixar Certificado de Participação
+                  </a>
+                </div>
+              {% endif %}
+
+              {# Botão enviar arquivo — só se pendente #}
+              {% if t.status == 'pendente' %}
+                <div style="display:flex;justify-content:flex-end;margin-top:16px">
+                  <button onclick="abrirModalEnvio('{{ t.id }}')"
+                          class="dash__btn-enviar-arquivo">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
+                      <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                    </svg>
+                    Enviar Arquivo
+                  </button>
+                </div>
+              {% endif %}
+
+            </article>
           {% endfor %}
         </div>
 
       {% else %}
-
-        {# ── Estado vazio ── #}
         <div class="dash__empty">
           <div class="dash__empty-icon">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15h8v2H8v-2zm0-4h8v2H8v-2z"/>
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm4 18H6V4h7v5h5v11z"/>
             </svg>
           </div>
-          <p class="dash__empty-title">Você ainda não enviou trabalhos</p>
-          <p class="dash__empty-subtitle">
-            Submeta seu primeiro trabalho acadêmico e acompanhe o processo de avaliação aqui.
-          </p>
-          <a href="{{ url_for('novo_trabalho') }}" class="dash__btn-cta">
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
-              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-            </svg>
-            Enviar primeiro trabalho
-          </a>
+          <p class="dash__empty-title">Você ainda não tem trabalhos atribuídos</p>
+          <p class="dash__empty-subtitle">Aguarde seu professor criar um trabalho para você.</p>
         </div>
-
       {% endif %}
 
     </section>
-
   </main>
+
+  {# Modal Enviar Arquivo #}
+  <div id="modal-envio" class="modal__overlay" style="display:none">
+    <div class="modal__box">
+      <div class="modal__header">
+        <div>
+          <h2 class="modal__title">Enviar Trabalho</h2>
+          <p class="modal__subtitle">Faça o upload do seu trabalho em PDF ou Word</p>
+        </div>
+        <button onclick="fecharModalEnvio()" class="modal__close">&#x2715;</button>
+      </div>
+      <form id="form-envio" method="POST" action="" enctype="multipart/form-data">
+        <div class="modal__field">
+          <label class="modal__label">Arquivo (PDF ou Word, máximo 15MB)</label>
+          <input class="modal__input" type="file" name="arquivo" accept=".pdf,.docx" required />
+        </div>
+        <div class="modal__actions">
+          <button type="button" onclick="fecharModalEnvio()" class="modal__btn-cancelar">Cancelar</button>
+          <button type="submit" class="modal__btn-criar" style="background:#3b5bdb">Enviar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalEnvio(trabalhoId) {
+      document.getElementById('form-envio').action = '/enviar-arquivo/' + trabalhoId;
+      document.getElementById('modal-envio').style.display = 'flex';
+    }
+    function fecharModalEnvio() {
+      document.getElementById('modal-envio').style.display = 'none';
+    }
+  </script>
 
 {% endblock %}

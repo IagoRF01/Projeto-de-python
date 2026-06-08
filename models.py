@@ -32,10 +32,14 @@ class Trabalho(db.Model):
 class Avaliacao(db.Model):
     __tablename__ = "avaliacoes"
 
-    id           = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    trabalho_id  = db.Column(db.String(36), nullable=False)
-    avaliador_id = db.Column(db.String(36), nullable=False)
-    nota         = db.Column(db.Numeric)
-    comentario   = db.Column(db.Text)
-    status       = db.Column(db.String(50), default="Pendente")
-    criado_em    = db.Column(db.DateTime, default=datetime.utcnow)
+    id            = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    trabalho_id   = db.Column(db.String(36), nullable=False)
+    avaliador_id  = db.Column(db.String(36), nullable=False)
+    relevancia    = db.Column(db.Numeric)
+    metodologia   = db.Column(db.Numeric)
+    clareza       = db.Column(db.Numeric)
+    originalidade = db.Column(db.Numeric)
+    nota          = db.Column(db.Numeric)   # média calculada automaticamente
+    comentario    = db.Column(db.Text)
+    status        = db.Column(db.String(50), default="Pendente")
+    criado_em     = db.Column(db.DateTime, default=datetime.utcnow)

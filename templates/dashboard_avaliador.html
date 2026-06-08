@@ -6,15 +6,11 @@
 
 {% block content %}
 
-  {# ══════════════════════════════════════
-     HEADER — verde
-  ══════════════════════════════════════ #}
   <header class="dash__header dash__header--avaliador">
     <div class="dash__header-info">
       <h1 class="dash__header-title">Dashboard do Avaliador</h1>
       <p class="dash__header-welcome">Bem-vindo, {{ usuario.nome }}</p>
     </div>
-
     <div class="dash__header-actions">
       <a href="{{ url_for('logout') }}" class="dash__btn-sair">
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -27,44 +23,53 @@
 
   <main class="dash__main">
 
-    {# ══════════════════════════════════════
-       CARDS DE ESTATÍSTICAS
-    ══════════════════════════════════════ #}
-    <div class="dash__stats">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="nt__alert nt__alert--{{ category }}" style="margin-bottom:20px">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
 
+    <div class="dash__stats">
       <div class="dash__stat-card dash__stat-card--yellow">
         <span class="dash__stat-label">Aguardando Envio</span>
         <span class="dash__stat-value">{{ trabalhos_pendentes | length }}</span>
       </div>
-
       <div class="dash__stat-card dash__stat-card--blue">
         <span class="dash__stat-label">Aguardando Avaliação</span>
         <span class="dash__stat-value">{{ trabalhos_em_avaliacao | length }}</span>
       </div>
-
       <div class="dash__stat-card dash__stat-card--green">
         <span class="dash__stat-label">Avaliados</span>
         <span class="dash__stat-value">
           {{ todos_trabalhos | selectattr('status', 'in', ['aprovado', 'rejeitado']) | list | length }}
         </span>
       </div>
-
     </div>
 
-    {# ── Botão criar novo trabalho ── #}
-    <div style="margin-bottom: 32px;">
-      <a href="{{ url_for('novo_trabalho') }}" class="dash__btn-criar"></a>
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
-          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-        </svg>
-        Criar Novo Trabalho
-      </a>
-    </div>
+    <div style="margin-bottom:32px; display:flex; gap:12px; flex-wrap:wrap">
+  <button onclick="document.getElementById('modal-criar').style.display='flex'"
+          class="dash__btn-criar">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
+      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+    </svg>
+    Criar Novo Trabalho
+  </button>
+  <a href="{{ url_for('exportar_pdf') }}" class="dash__btn-exportar-pdf">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
+      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+    </svg>
+    Exportar para PDF
+  </a>
+  <a href="{{ url_for('exportar_excel') }}" class="dash__btn-exportar-excel">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
+      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+    </svg>
+    Exportar para Excel
+  </a>
+</div>
 
-    {# ══════════════════════════════════════
-       TRABALHOS PARA AVALIAR
-    ══════════════════════════════════════ #}
-    <section style="margin-bottom: 48px;">
+    {# ── Trabalhos para Avaliar ── #}
+    <section style="margin-bottom:48px">
       <div class="dash__section-header">
         <h2 class="dash__section-title">Trabalhos para Avaliar</h2>
       </div>
@@ -75,29 +80,22 @@
         <div class="dash__work-list">
           {% for t in para_avaliar %}
             <article class="dash__work-card dash__work-card--avaliador">
-
               <div class="dash__work-card-top">
                 <div>
                   <h3 class="dash__work-title">{{ t.titulo }}</h3>
-                  <p class="dash__work-aluno">Aluno: {{ alunos.get(t.aluno_id, '—') }}</p>
+                  <p class="dash__work-aluno">Aluno: {{ alunos_nomes.get(t.aluno_id, '—') }}</p>
                 </div>
                 <span class="dash__badge dash__badge--em-avaliacao">Aguardando Avaliação</span>
               </div>
-
               {% if t.resumo %}
                 <p class="dash__work-desc-label">Descrição:</p>
                 <p class="dash__work-resumo">{{ t.resumo }}</p>
               {% endif %}
-
               <div class="dash__work-meta">
                 <div class="dash__work-meta-item">
                   <p class="dash__work-meta-label">Arquivo Enviado</p>
                   <p class="dash__work-meta-value">
-                    {% if t.arquivo_url %}
-                      {{ t.arquivo_url.split('/')[-1] }}
-                    {% else %}
-                      —
-                    {% endif %}
+                    {% if t.arquivo_url %}{{ t.arquivo_url.split('/')[-1] }}{% else %}—{% endif %}
                   </p>
                 </div>
                 <div class="dash__work-meta-item">
@@ -113,8 +111,6 @@
                   </p>
                 </div>
               </div>
-
-              {# Ações #}
               <div class="dash__work-actions">
                 {% if t.arquivo_url %}
                   <a href="{{ t.arquivo_url }}" target="_blank" class="dash__btn-baixar">
@@ -124,18 +120,18 @@
                     Baixar Arquivo
                   </a>
                 {% endif %}
-                <a href="{{ url_for('avaliar_trabalho', trabalho_id=t.id) }}" class="dash__btn-avaliar"></a>
+                <button
+                  onclick="abrirModalAvaliar('{{ t.id }}', '{{ t.titulo | e }}', '{{ t.resumo | e }}')"
+                  class="dash__btn-avaliar">
                   <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
                   </svg>
                   Avaliar
-                </a>
+                </button>
               </div>
-
             </article>
           {% endfor %}
         </div>
-
       {% else %}
         <div class="dash__empty">
           <div class="dash__empty-icon dash__empty-icon--green">
@@ -144,15 +140,12 @@
             </svg>
           </div>
           <p class="dash__empty-title">Nenhum trabalho aguardando avaliação</p>
-          <p class="dash__empty-subtitle">Quando os alunos enviarem trabalhos, eles aparecerão aqui.</p>
+          <p class="dash__empty-subtitle">Quando os alunos enviarem arquivos, aparecerão aqui.</p>
         </div>
       {% endif %}
-
     </section>
 
-    {# ══════════════════════════════════════
-       TODOS OS TRABALHOS
-    ══════════════════════════════════════ #}
+    {# ── Todos os Trabalhos ── #}
     <section>
       <div class="dash__section-header">
         <h2 class="dash__section-title">Todos os Trabalhos</h2>
@@ -161,7 +154,6 @@
       {% if todos_trabalhos %}
         <div class="dash__work-list">
           {% for t in todos_trabalhos %}
-
             {% if t.status == 'aprovado' %}
               {% set badge_class = 'dash__badge--aprovado' %}
               {% set badge_label = 'Aprovado' %}
@@ -175,22 +167,18 @@
               {% set badge_class = 'dash__badge--pendente' %}
               {% set badge_label = 'Aguardando Envio' %}
             {% endif %}
-
             <article class="dash__work-card dash__work-card--todos">
-
               <div class="dash__work-card-top">
                 <div>
                   <h3 class="dash__work-title">{{ t.titulo }}</h3>
-                  <p class="dash__work-aluno">Aluno: {{ alunos.get(t.aluno_id, '—') }}</p>
+                  <p class="dash__work-aluno">Aluno: {{ alunos_nomes.get(t.aluno_id, '—') }}</p>
                 </div>
                 <span class="dash__badge {{ badge_class }}">{{ badge_label }}</span>
               </div>
-
               {% if t.resumo %}
                 <p class="dash__work-desc-label">Descrição:</p>
                 <p class="dash__work-resumo">{{ t.resumo }}</p>
               {% endif %}
-
               <div class="dash__work-meta">
                 {% if t.arquivo_url %}
                   <div class="dash__work-meta-item">
@@ -217,18 +205,20 @@
                     {{ t.criado_em.strftime('%d/%m/%Y') if t.criado_em else '—' }}
                   </p>
                 </div>
-                <div class="dash__work-meta-item">
-                  <p class="dash__work-meta-label">Submetido em</p>
-                  <p class="dash__work-meta-value">
-                    {{ t.criado_em.strftime('%d/%m/%Y') if t.criado_em else '—' }}
-                  </p>
-                </div>
               </div>
-
+              {% set av_card = avaliacoes_map.get(t.id) if avaliacoes_map is defined else none %}
+{% if t.status in ['aprovado', 'rejeitado'] %}
+  <a href="{{ url_for('certificado_avaliador', trabalho_id=t.id) }}"
+     class="dash__btn-certificado-revisor">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px">
+      <path d="M12 1L9 9H1l6.5 4.7-2.5 7.8L12 17l7 4.5-2.5-7.8L23 9h-8z"/>
+    </svg>
+    Baixar Certificado de Participação como Revisor
+  </a>
+{% endif %}
             </article>
           {% endfor %}
         </div>
-
       {% else %}
         <div class="dash__empty">
           <div class="dash__empty-icon dash__empty-icon--green">
@@ -237,12 +227,126 @@
             </svg>
           </div>
           <p class="dash__empty-title">Nenhum trabalho cadastrado ainda</p>
-          <p class="dash__empty-subtitle">Crie um novo trabalho para os alunos começarem a enviar.</p>
+          <p class="dash__empty-subtitle">Crie um novo trabalho para os alunos enviarem.</p>
         </div>
       {% endif %}
-
     </section>
 
   </main>
+
+  {# ── Modal Criar Trabalho ── #}
+  <div id="modal-criar" class="modal__overlay" style="display:none">
+    <div class="modal__box">
+      <div class="modal__header">
+        <div>
+          <h2 class="modal__title">Criar Novo Trabalho</h2>
+          <p class="modal__subtitle">Defina os detalhes do trabalho e atribua a um estudante</p>
+        </div>
+        <button onclick="document.getElementById('modal-criar').style.display='none'"
+                class="modal__close">&#x2715;</button>
+      </div>
+      <form method="POST" action="{{ url_for('criar_trabalho') }}">
+        <div class="modal__field">
+          <label class="modal__label">Título do Trabalho</label>
+          <input class="modal__input" type="text" name="titulo"
+                 placeholder="Digite o título do trabalho" required />
+        </div>
+        <div class="modal__field">
+          <label class="modal__label">Descrição / Requisitos</label>
+          <textarea class="modal__textarea" name="resumo" rows="3"
+                    placeholder="Descreva os requisitos e objetivos do trabalho" required></textarea>
+        </div>
+        <div class="modal__field">
+          <label class="modal__label">Estudante</label>
+          <select class="modal__input" name="aluno_id" required>
+            <option value="" disabled selected>Selecione um estudante</option>
+            {% for aluno in alunos %}
+              <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="modal__field">
+          <label class="modal__label">Prazo de Entrega</label>
+          <input class="modal__input" type="datetime-local" name="prazo_envio" />
+        </div>
+        <div class="modal__actions">
+          <button type="button"
+                  onclick="document.getElementById('modal-criar').style.display='none'"
+                  class="modal__btn-cancelar">Cancelar</button>
+          <button type="submit" class="modal__btn-criar">Criar Trabalho</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {# ── Modal Avaliar Trabalho ── #}
+  <div id="modal-avaliar" class="modal__overlay" style="display:none">
+    <div class="modal__box" style="max-width:580px">
+      <div class="modal__header">
+        <div>
+          <h2 class="modal__title">Avaliar Trabalho Acadêmico</h2>
+          <p class="modal__subtitle" id="modal-avaliar-subtitulo"></p>
+        </div>
+        <button onclick="fecharModalAvaliar()" class="modal__close">&#x2715;</button>
+      </div>
+      <div class="aval__work-info" style="margin-bottom:20px">
+        <p style="font-size:0.8rem;font-weight:700;color:#374151;margin-bottom:4px">Resumo do Trabalho:</p>
+        <p class="aval__work-resumo" id="modal-avaliar-resumo"></p>
+      </div>
+      <form id="form-avaliar" method="POST" action="">
+
+        {% for criterio, label, desc in [
+          ('relevancia',    'Relevância',    'Avalie a importância e relevância do tema para a área de estudo'),
+          ('metodologia',   'Metodologia',   'Avalie a adequação e rigor da metodologia utilizada'),
+          ('clareza',       'Clareza',       'Avalie a clareza da escrita e organização do trabalho'),
+          ('originalidade', 'Originalidade', 'Avalie a originalidade e contribuição do trabalho')
+        ] %}
+          <div class="aval__criterio">
+            <div class="aval__criterio-header">
+              <span class="aval__criterio-nome">{{ label }}</span>
+              <span class="aval__criterio-valor" id="val-{{ criterio }}">7</span>
+            </div>
+            <input type="range" name="{{ criterio }}" id="sl-{{ criterio }}"
+                   min="0" max="10" step="0.5" value="7"
+                   class="aval__slider"
+                   oninput="document.getElementById('val-{{ criterio }}').textContent=this.value">
+            <p class="aval__criterio-desc">{{ desc }}</p>
+          </div>
+        {% endfor %}
+
+        <div class="modal__field" style="margin-top:8px">
+          <label class="modal__label">Comentários e Feedback</label>
+          <textarea class="modal__textarea" id="comentario-avaliar" name="comentario"
+                    rows="4" placeholder="Forneça um feedback detalhado sobre o trabalho..."></textarea>
+        </div>
+        <div class="modal__actions">
+          <button type="button" onclick="fecharModalAvaliar()" class="modal__btn-cancelar">
+            Cancelar
+          </button>
+          <button type="submit" class="modal__btn-criar" style="background:#16a34a">
+            Enviar Avaliação
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalAvaliar(trabalhoId, titulo, resumo) {
+      document.getElementById('modal-avaliar-subtitulo').textContent = titulo;
+      document.getElementById('modal-avaliar-resumo').textContent    = resumo || '—';
+      document.getElementById('form-avaliar').action = '/avaliar/' + trabalhoId;
+      ['relevancia','metodologia','clareza','originalidade'].forEach(function(c) {
+        document.getElementById('sl-' + c).value = 7;
+        document.getElementById('val-' + c).textContent = 7;
+      });
+      document.getElementById('comentario-avaliar').value = '';
+      document.getElementById('modal-avaliar').style.display = 'flex';
+    }
+
+    function fecharModalAvaliar() {
+      document.getElementById('modal-avaliar').style.display = 'none';
+    }
+  </script>
 
 {% endblock %}

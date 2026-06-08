@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, flash, session
+from flask import request, redirect, url_for, flash, session
 from database import app, db
 from models import Trabalho, Avaliacao, Usuario
 from routes.auth import login_required
@@ -8,70 +8,62 @@ import uuid
 @app.route("/avaliar/<trabalho_id>", methods=["GET", "POST"])
 @login_required(perfil="avaliador")
 def avaliar_trabalho(trabalho_id):
-    trabalho = Trabalho.query.get(trabalho_id)
+    trabalho  = Trabalho.query.get(trabalho_id)
 
-    # Trabalho não existe ou não pertence a este avaliador
     if not trabalho or trabalho.avaliador_id != session["usuario_id"]:
         flash("Trabalho não encontrado.", "erro")
         return redirect(url_for("dashboard_avaliador"))
 
-    # Busca avaliação existente (se já avaliou antes)
     avaliacao = Avaliacao.query.filter_by(
         trabalho_id=trabalho_id,
         avaliador_id=session["usuario_id"]
     ).first()
 
-    # Nome do aluno (anonimato: só mostra se admin, aqui é avaliador então esconde)
-    aluno = Usuario.query.get(trabalho.aluno_id)
-    nome_aluno = "Autor Anônimo"  # RF09 — anonimato
-
     if request.method == "POST":
-        nota       = request.form.get("nota", "").strip()
-        comentario = request.form.get("comentario", "").strip()
-        acao       = request.form.get("acao", "salvar")  # 'salvar' ou 'finalizar'
-
-        # ── Validações ─────────────────────────────────────────
-        if not nota:
-            flash("Informe a nota.", "erro")
-            return redirect(url_for("avaliar_trabalho", trabalho_id=trabalho_id))
-
+        # Lê os sliders
         try:
-            nota_float = float(nota)
-            if not (0 <= nota_float <= 10):
-                raise ValueError
+            relevancia    = float(request.form.get("relevancia", 7))
+            metodologia   = float(request.form.get("metodologia", 7))
+            clareza       = float(request.form.get("clareza", 7))
+            originalidade = float(request.form.get("originalidade", 7))
         except ValueError:
-            flash("Nota deve ser um número entre 0 e 10.", "erro")
-            return redirect(url_for("avaliar_trabalho", trabalho_id=trabalho_id))
+            flash("Valores de critérios inválidos.", "erro")
+            return redirect(url_for("dashboard_avaliador"))
 
-        # ── Salva ou atualiza avaliação ────────────────────────
+        comentario = request.form.get("comentario", "").strip()
+
+        # Média automática dos 4 critérios
+        nota = round((relevancia + metodologia + clareza + originalidade) / 4, 2)
+
         if avaliacao:
-            avaliacao.nota       = nota_float
-            avaliacao.comentario = comentario
-            avaliacao.status     = "Finalizado" if acao == "finalizar" else "Pendente"
+            avaliacao.relevancia    = relevancia
+            avaliacao.metodologia   = metodologia
+            avaliacao.clareza       = clareza
+            avaliacao.originalidade = originalidade
+            avaliacao.nota          = nota
+            avaliacao.comentario    = comentario
+            avaliacao.status        = "Finalizado"
         else:
             avaliacao = Avaliacao(
                 id=str(uuid.uuid4()),
                 trabalho_id=trabalho_id,
                 avaliador_id=session["usuario_id"],
-                nota=nota_float,
+                relevancia=relevancia,
+                metodologia=metodologia,
+                clareza=clareza,
+                originalidade=originalidade,
+                nota=nota,
                 comentario=comentario,
-                status="Finalizado" if acao == "finalizar" else "Pendente",
+                status="Finalizado",
             )
             db.session.add(avaliacao)
 
-        # ── Atualiza status do trabalho ────────────────────────
-        if acao == "finalizar":
-            trabalho.status = "aprovado" if nota_float >= 5 else "rejeitado"
-            flash("Avaliação finalizada com sucesso!", "sucesso")
-        else:
-            flash("Avaliação salva como rascunho.", "sucesso")
-
+        # Atualiza status do trabalho com base na média
+        trabalho.status = "aprovado" if nota >= 5 else "rejeitado"
         db.session.commit()
+
+        flash(f"Avaliação enviada! Nota final: {nota}/10", "sucesso")
         return redirect(url_for("dashboard_avaliador"))
 
-    return render_template(
-        "avaliar_trabalho.html",
-        trabalho=trabalho,
-        avaliacao=avaliacao,
-        nome_aluno=nome_aluno,
-    )
+    # GET — renderiza o modal via redirect com parâmetro
+    return redirect(url_for("dashboard_avaliador", avaliar=trabalho_id))

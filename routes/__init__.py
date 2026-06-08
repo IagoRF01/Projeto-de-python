@@ -7,3 +7,6 @@ from .auth import *
 from .dashboard_admin import *
 from .admin import *
 from .avaliacao import *
+from .criar_trabalho import *
+from .certificado import *
+from .exportar import *
