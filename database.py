@@ -9,7 +9,7 @@ app = Flask(__name__)
 # ── Segurança ──────────────────────────────────────────────────
 # Em produção, mova para variável de ambiente:
 # export SECRET_KEY="algo-muito-secreto"
-app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-troque-em-producao")
+app.secret_key = os.environ.get("SECRET_KEY", "9f3c4e6a1b2d8f7e5c0a9d1e3b4c6f8a2d1c3e5f7a9b0c2d4e6f8a1b3c5d7e9")
 
 # ── Supabase (PostgreSQL) ──────────────────────────────────────
 # Em produção, use variável de ambiente:
