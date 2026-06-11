@@ -58,10 +58,10 @@ pip install -r requirements.txt
 
 Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
 ```
-SECRET_KEY=sua-chave-secreta
-DATABASE_URL=sua-url-do-supabase
-SUPABASE_URL=https://seu-projeto.supabase.co
-SUPABASE_KEY=sua-chave-anon
+SECRET_KEY=9f3c4e6a1b2d8f7e5c0a9d1e3b4c6f8a2d1c3e5f7a9b0c2d4e6f8a1b3c5d7e9
+DATABASE_URL=postgresql://postgres.zppeatcebobyddjpbmsv:projetopython@aws-1-us-west-2.pooler.supabase.com:5432/postgres
+SUPABASE_URL=https://zppeatcebobyddjpbmsv.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpwcGVhdGNlYm9ieWRkanBibXN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwMTA3MjIsImV4cCI6MjA5NTU4NjcyMn0.PsugX-IJpHAvuYfpiDRiGqeypuTR0FOZjEB5o7k6lVw
 ```
 
 **5. Rode o projeto**
