@@ -1,5 +1,6 @@
 import os
 import uuid
+from datetime import datetime
 from flask import render_template, request, redirect, url_for, session, flash
 from database import app, db
 from models import Trabalho
@@ -12,13 +13,20 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXV
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-BUCKET              = "trabalhos"
+BUCKET               = "trabalhos"
 EXTENSOES_PERMITIDAS = {"pdf", "docx"}
-TAMANHO_MAXIMO      = 15 * 1024 * 1024  # 15 MB
+TAMANHO_MAXIMO       = 15 * 1024 * 1024  # 15 MB
 
 
 def extensao_permitida(nome):
     return "." in nome and nome.rsplit(".", 1)[1].lower() in EXTENSOES_PERMITIDAS
+
+
+def prazo_expirado(trabalho):
+    """Retorna True se o prazo do trabalho já passou."""
+    if not trabalho.prazo_envio:
+        return False
+    return datetime.utcnow() > trabalho.prazo_envio
 
 
 # ── Criar novo trabalho (aluno cria do zero) ───────────────────
@@ -48,7 +56,6 @@ def novo_trabalho():
             flash("Arquivo muito grande. O limite é 15 MB.", "erro")
             return redirect(url_for("novo_trabalho"))
 
-        # Upload Supabase
         extensao   = arquivo.filename.rsplit(".", 1)[1].lower()
         nome_unico = f"{uuid.uuid4()}.{extensao}"
         caminho    = f"{session['usuario_id']}/{nome_unico}"
@@ -97,6 +104,12 @@ def enviar_arquivo(trabalho_id):
         flash("Este trabalho já foi enviado.", "erro")
         return redirect(url_for("dashboard_aluno"))
 
+    # ── Validação de prazo (data E hora) ──────────────────────
+    if prazo_expirado(trabalho):
+        prazo_fmt = trabalho.prazo_envio.strftime('%d/%m/%Y às %H:%M')
+        flash(f"O prazo de entrega já passou! O prazo era {prazo_fmt}.", "erro")
+        return redirect(url_for("dashboard_aluno"))
+
     arquivo = request.files.get("arquivo")
 
     if not arquivo or arquivo.filename == "":
@@ -112,7 +125,6 @@ def enviar_arquivo(trabalho_id):
         flash("Arquivo muito grande. O limite é 15 MB.", "erro")
         return redirect(url_for("dashboard_aluno"))
 
-    # Upload Supabase
     extensao   = arquivo.filename.rsplit(".", 1)[1].lower()
     nome_unico = f"{uuid.uuid4()}.{extensao}"
     caminho    = f"{session['usuario_id']}/{nome_unico}"
@@ -129,7 +141,6 @@ def enviar_arquivo(trabalho_id):
         app.logger.error(f"Erro upload: {e}")
         return redirect(url_for("dashboard_aluno"))
 
-    # Atualiza o trabalho
     trabalho.arquivo_url = arquivo_url
     trabalho.status      = "em_avaliacao"
     db.session.commit()

@@ -212,15 +212,25 @@
 
               {# Botão enviar arquivo — só se pendente #}
               {% if t.status == 'pendente' %}
-                <div style="display:flex;justify-content:flex-end;margin-top:16px">
-                  <button onclick="abrirModalEnvio('{{ t.id }}')"
-                          class="dash__btn-enviar-arquivo">
-                    <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
-                      <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                {% if t.prazo_envio and t.prazo_envio < now %}
+                  {# Prazo expirado — mostra aviso no lugar do botão #}
+                  <div class="aluno__prazo-expirado">
+                    <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px;flex-shrink:0">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
-                    Enviar Arquivo
-                  </button>
-                </div>
+                    Prazo encerrado em {{ t.prazo_envio.strftime('%d/%m/%Y às %H:%M') }}. Entrega não permitida.
+                  </div>
+                {% else %}
+                  <div style="display:flex;justify-content:flex-end;margin-top:16px">
+                    <button onclick="abrirModalEnvio('{{ t.id }}')"
+                            class="dash__btn-enviar-arquivo">
+                      <svg viewBox="0 0 24 24" fill="currentColor" style="width:15px;height:15px">
+                        <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+                      </svg>
+                      Enviar Arquivo
+                    </button>
+                  </div>
+                {% endif %}
               {% endif %}
 
             </article>

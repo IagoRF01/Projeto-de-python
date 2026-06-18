@@ -45,4 +45,5 @@ def dashboard_aluno():
         nomes_avaliadores=nomes_avaliadores,
         tempo_restante=tempo_restante,
         avaliacoes=avaliacoes,
+        now=datetime.utcnow(),
     )
