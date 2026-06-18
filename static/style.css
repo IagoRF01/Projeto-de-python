@@ -1382,3 +1382,319 @@ body.page-novo-trabalho {
   font-size: 0.775rem;
   color: #9ca3af;
 }
+
+
+/* ══════════════════════════════════════════════
+   11. NOTA E AVALIAÇÃO — DASHBOARD ALUNO
+══════════════════════════════════════════════ */
+
+.aluno__nota-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin-top: 16px;
+}
+
+.aluno__nota-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.aluno__nota-valor {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.aluno__avaliacao-box { margin-top: 16px; }
+
+.aluno__avaliacao-titulo {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.aluno__avaliacao-card {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.aluno__avaliador-nome {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+}
+
+.aluno__criterios {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.aluno__criterio-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.aluno__criterio-valor {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.aluno__comentario {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.aluno__btn-certificado {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #16a34a;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.aluno__btn-certificado:hover {
+  background-color: #15803d;
+  transform: translateY(-1px);
+}
+
+/* Botões exportar */
+.dash__btn-exportar-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.dash__btn-exportar-pdf:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.dash__btn-exportar-excel {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.dash__btn-exportar-excel:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Certificado revisor */
+.dash__btn-certificado-revisor {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background-color: #a855f7;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 12px;
+}
+
+.dash__btn-certificado-revisor:hover {
+  background-color: #9333ea;
+  transform: translateY(-1px);
+}
+
+/* Nota final no card do avaliador */
+.dash__nota-final-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 14px;
+}
+
+.dash__nota-final-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.dash__nota-final-valor {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.dash__criterios-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.dash__criterio-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.dash__criterio-valor {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+
+/* ══════════════════════════════════════════════
+   12. NOTAS REORGANIZADAS — DASHBOARD ALUNO
+══════════════════════════════════════════════ */
+
+/* Título da seção de avaliação */
+.aluno__avaliacao-titulo {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+}
+
+/* Grid de critérios */
+.aluno__criterios {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.aluno__criterio {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.aluno__criterio-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.aluno__criterio-valor {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #3b5bdb;
+}
+
+/* Comentário do avaliador */
+.aluno__comentario-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-left: 3px solid #6b7280;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.aluno__comentario-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.aluno__comentario-texto {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* Nota final — aprovado (verde) */
+.aluno__nota-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 4px;
+}
+
+.aluno__nota-box--aprovado {
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+}
+
+.aluno__nota-box--reprovado {
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+}
+
+.aluno__nota-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.aluno__nota-status {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.aluno__nota-box--aprovado .aluno__nota-status { color: #16a34a; }
+.aluno__nota-box--reprovado .aluno__nota-status { color: #dc2626; }
+
+.aluno__nota-valor {
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.aluno__nota-box--aprovado .aluno__nota-valor { color: #16a34a; }
+.aluno__nota-box--reprovado .aluno__nota-valor { color: #dc2626; }
+
+@media (max-width: 640px) {
+  .aluno__criterios { grid-template-columns: repeat(2, 1fr); }
+}
