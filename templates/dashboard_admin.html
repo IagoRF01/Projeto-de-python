@@ -74,14 +74,14 @@
     </div>
 
     {# ── Botão criar usuário ── #}
-    <div style="margin-bottom: 32px;">
-      <a href="{{ url_for('criar_usuario') }}" class="dash__btn-admin-criar"></a>
-        <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
-          <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-        </svg>
-        Criar Novo Usuário
-      </a>
-    </div>
+<div style="margin-bottom: 32px;">
+  <a href="{{ url_for('criar_usuario') }}" class="dash__btn-admin-criar">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px">
+      <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+    </svg>
+    Criar Novo Usuário
+  </a>
+</div>
 
     {# ══════════════════════════════════════
        USUÁRIOS CADASTRADOS
@@ -102,12 +102,17 @@
             <span class="admin__user-panel-title">Alunos ({{ alunos | length }})</span>
             <span class="admin__user-panel-desc">Lista de todos os alunos cadastrados</span>
           </div>
-          {% for a in alunos %}
-            <div class="admin__user-card admin__user-card--aluno">
-              <p class="admin__user-nome">{{ a.nome }}</p>
-              <p class="admin__user-email">{{ a.email }}</p>
-            </div>
-          {% else %}
+       {% for a in alunos %}
+  <div class="admin__user-card admin__user-card--aluno">
+    <p class="admin__user-nome">{{ a.nome }}</p>
+    <p class="admin__user-email">{{ a.email }}</p>
+
+    <form action="{{ url_for('remover_usuario', usuario_id=a.id) }}" method="POST">
+      <button type="submit">Excluir</button>
+    </form>
+
+  </div>
+{% else %}
             <p class="admin__user-vazio">Nenhum aluno cadastrado.</p>
           {% endfor %}
         </div>
@@ -118,12 +123,17 @@
             <span class="admin__user-panel-title">Avaliadores ({{ avaliadores | length }})</span>
             <span class="admin__user-panel-desc">Lista de todos os avaliadores cadastrados</span>
           </div>
-          {% for av in avaliadores %}
-            <div class="admin__user-card admin__user-card--avaliador">
-              <p class="admin__user-nome">{{ av.nome }}</p>
-              <p class="admin__user-email">{{ av.email }}</p>
-            </div>
-          {% else %}
+        {% for av in avaliadores %}
+  <div class="admin__user-card admin__user-card--avaliador">
+    <p class="admin__user-nome">{{ av.nome }}</p>
+    <p class="admin__user-email">{{ av.email }}</p>
+
+    <form action="{{ url_for('remover_usuario', usuario_id=av.id) }}" method="POST">
+      <button type="submit">Excluir</button>
+    </form>
+
+  </div>
+{% else %}
             <p class="admin__user-vazio">Nenhum avaliador cadastrado.</p>
           {% endfor %}
         </div>
