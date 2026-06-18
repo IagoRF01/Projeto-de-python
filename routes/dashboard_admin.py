@@ -1,5 +1,5 @@
-from flask import render_template, session
-from database import app
+from flask import render_template, session, redirect, url_for, flash
+from database import app, db
 from models import Usuario, Trabalho
 from routes.auth import login_required
 
@@ -34,4 +34,19 @@ def dashboard_admin():
         total_pendentes=len(pendentes),
         total_em_avaliacao=len(em_avaliacao),
         nomes=nomes,
-    )
+    ) 
+@app.route("/remover-usuario/<usuario_id>", methods=["POST"])
+@login_required(perfil="admin")
+def remover_usuario(usuario_id):
+
+    usuario = Usuario.query.get(usuario_id)
+
+    if not usuario:
+        flash("Usuário não encontrado.", "erro")
+        return redirect(url_for("dashboard_admin"))
+
+    db.session.delete(usuario)
+    db.session.commit()
+
+    flash("Usuário removido com sucesso!", "sucesso")
+    return redirect(url_for("dashboard_admin"))
