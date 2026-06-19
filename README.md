@@ -70,6 +70,9 @@ python main.py
 ```
 
 Acesse em `http://127.0.0.1:5000`
+Usuário Estudante: teste@gmail.com        Senha: 123
+Usuário Avaliador: teste2@gmail.com        Senha: 123456
+Usuário Aministrador: admin@gmail.com        Senha: 123
 
 ---
 
