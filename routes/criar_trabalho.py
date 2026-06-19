@@ -19,11 +19,6 @@ def criar_trabalho():
         flash("Preencha título, descrição e selecione um estudante.", "erro")
         return redirect(url_for("dashboard_avaliador"))
 
-    aluno = Usuario.query.filter_by(id=aluno_id, tipo_usuario="aluno").first()
-    if not aluno:
-        flash("Estudante inválido.", "erro")
-        return redirect(url_for("dashboard_avaliador"))
-
     # ── Prazo (opcional) ───────────────────────────────────────
     prazo = None
     if prazo_envio:
@@ -33,7 +28,51 @@ def criar_trabalho():
             flash("Formato de prazo inválido.", "erro")
             return redirect(url_for("dashboard_avaliador"))
 
-    # ── Cria o trabalho ────────────────────────────────────────
+    # ── Envio para todos os alunos ────────────────────────────
+    if aluno_id == "TODOS":
+
+        alunos = Usuario.query.filter_by(
+            tipo_usuario="aluno"
+        ).all()
+
+        if not alunos:
+            flash("Nenhum aluno encontrado.", "erro")
+            return redirect(url_for("dashboard_avaliador"))
+
+        for aluno in alunos:
+
+            trabalho = Trabalho(
+                id=str(uuid.uuid4()),
+                titulo=titulo,
+                resumo=resumo,
+                status="pendente",
+                aluno_id=aluno.id,
+                avaliador_id=session["usuario_id"],
+                prazo_envio=prazo,
+            )
+
+            db.session.add(trabalho)
+
+        db.session.commit()
+
+        flash(
+            f"Trabalho '{titulo}' enviado para todos os alunos!",
+            "sucesso"
+        )
+
+        return redirect(url_for("dashboard_avaliador"))
+
+    # ── Validação do aluno individual ─────────────────────────
+    aluno = Usuario.query.filter_by(
+        id=aluno_id,
+        tipo_usuario="aluno"
+    ).first()
+
+    if not aluno:
+        flash("Estudante inválido.", "erro")
+        return redirect(url_for("dashboard_avaliador"))
+
+    # ── Cria o trabalho individual ────────────────────────────
     trabalho = Trabalho(
         id=str(uuid.uuid4()),
         titulo=titulo,
@@ -47,5 +86,9 @@ def criar_trabalho():
     db.session.add(trabalho)
     db.session.commit()
 
-    flash(f"Trabalho '{titulo}' criado e enviado para {aluno.nome}!", "sucesso")
+    flash(
+        f"Trabalho '{titulo}' criado e enviado para {aluno.nome}!",
+        "sucesso"
+    )
+
     return redirect(url_for("dashboard_avaliador"))

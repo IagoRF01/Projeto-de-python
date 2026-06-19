@@ -257,14 +257,19 @@
                     placeholder="Descreva os requisitos e objetivos do trabalho" required></textarea>
         </div>
         <div class="modal__field">
-          <label class="modal__label">Estudante</label>
-          <select class="modal__input" name="aluno_id" required>
-            <option value="" disabled selected>Selecione um estudante</option>
-            {% for aluno in alunos %}
-              <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
-            {% endfor %}
-          </select>
-        </div>
+  <label class="modal__label">Estudante</label>
+  <select class="modal__input" name="aluno_id" required>
+    <option value="" disabled selected>Selecione um estudante</option>
+
+    <option value="TODOS">
+      Todos os alunos
+    </option>
+
+    {% for aluno in alunos %}
+      <option value="{{ aluno.id }}">{{ aluno.nome }}</option>
+    {% endfor %}
+  </select>
+</div> 
         <div class="modal__field">
           <label class="modal__label">Prazo de Entrega</label>
           <input class="modal__input" type="datetime-local" name="prazo_envio" />
