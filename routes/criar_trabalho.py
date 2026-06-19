@@ -3,8 +3,8 @@ from database import app, db
 from models import Trabalho, Usuario
 from routes.auth import login_required
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import uuid
-
 
 @app.route("/criar-trabalho", methods=["POST"])
 @login_required(perfil="avaliador")
@@ -19,11 +19,20 @@ def criar_trabalho():
         flash("Preencha título, descrição e selecione um estudante.", "erro")
         return redirect(url_for("dashboard_avaliador"))
 
-    # ── Prazo (opcional) ───────────────────────────────────────
+    # ── Prazo com ajuste de Fuso Horário ───────────────────────
     prazo = None
     if prazo_envio:
         try:
-            prazo = datetime.strptime(prazo_envio, "%Y-%m-%dT%H:%M")
+            # 1. Faz o parse da string enviada pelo formulário html
+            prazo_local = datetime.strptime(prazo_envio, "%Y-%m-%dT%H:%M")
+            
+            # 2. Define que esse horário pertence ao fuso de Brasília/São Paulo
+            fuso_local = ZoneInfo("America/Sao_Paulo")
+            prazo_com_fuso = prazo_local.replace(tzinfo=fuso_local)
+            
+            # 3. Converte para UTC antes de salvar no banco de dados
+            prazo = prazo_com_fuso.astimezone(ZoneInfo("UTC"))
+            
         except ValueError:
             flash("Formato de prazo inválido.", "erro")
             return redirect(url_for("dashboard_avaliador"))
