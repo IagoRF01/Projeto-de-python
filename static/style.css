@@ -1036,6 +1036,44 @@ body.page-novo-trabalho {
   transform: translateY(-1px);
 }
 
+/* Botão Excluir */
+.admin__user-card form {
+  margin-top: 12px;
+}
+
+.admin__user-card form button {
+  width: 100%;
+  padding: 6px 7px;
+
+  background: #ef4444;
+  color: #ffffff;
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.admin__user-card form button:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.admin__user-card form button:active {
+  transform: translateY(0);
+}
+
+.admin__user-card form button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
 /* Título de seção com ícone */
 .admin__section-title {
   display: flex;
