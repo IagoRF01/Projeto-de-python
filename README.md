@@ -130,6 +130,7 @@ Projeto desenvolvido para a disciplina de **Programação de Computadores** — 
 | Rafael Lucena Costa de Oliveira | Dev |
 | Thiago Braga Dantas de Oliveira | Dev |
 | João Victor Oliveira Evangelista | Dev |
+| Pedro Dantas | Dev |
 
 **Professora:** Joanacelle C. Melo  
 **Instituição:** UNIPÊ — Centro Universitário de João Pessoa  
