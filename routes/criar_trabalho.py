@@ -43,7 +43,7 @@ def criar_trabalho():
 
             trabalho = Trabalho(
                 id=str(uuid.uuid4()),
-                titulo=titulo,
+                titulo=f"[ANONIMO] {titulo}",
                 resumo=resumo,
                 status="pendente",
                 aluno_id=aluno.id,

@@ -82,8 +82,16 @@
             <article class="dash__work-card dash__work-card--avaliador">
               <div class="dash__work-card-top">
                 <div>
-                  <h3 class="dash__work-title">{{ t.titulo }}</h3>
-                  <p class="dash__work-aluno">Aluno: {{ alunos_nomes.get(t.aluno_id, '—') }}</p>
+                  <h3 class="dash__work-title"> 
+                     {{ t.titulo.replace('[ANONIMO] ', '') }}
+                    </h3>
+                  <p class="dash__work-aluno">
+    {% if t.titulo.startswith('[ANONIMO]') %}
+        Aluno: Anônimo
+    {% else %}
+        Aluno: {{ alunos_nomes.get(t.aluno_id, '—') }}
+    {% endif %}
+</p>
                 </div>
                 <span class="dash__badge dash__badge--em-avaliacao">Aguardando Avaliação</span>
               </div>
@@ -170,8 +178,16 @@
             <article class="dash__work-card dash__work-card--todos">
               <div class="dash__work-card-top">
                 <div>
-                  <h3 class="dash__work-title">{{ t.titulo }}</h3>
-                  <p class="dash__work-aluno">Aluno: {{ alunos_nomes.get(t.aluno_id, '—') }}</p>
+                  <h3 class="dash__work-title">
+    {{ t.titulo.replace('[ANONIMO] ', '') }}
+</h3> 
+                  <p class="dash__work-aluno">
+    {% if t.titulo.startswith('[ANONIMO]') %}
+        Aluno: Anônimo
+    {% else %}
+        Aluno: {{ alunos_nomes.get(t.aluno_id, '—') }}
+    {% endif %}
+ </p>
                 </div>
                 <span class="dash__badge {{ badge_class }}">{{ badge_label }}</span>
               </div>
